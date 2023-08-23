@@ -1,17 +1,29 @@
-import css from './Filter.module.css'
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
-export default function Filter({ value, onChange }) {
-    return(
-        <>
-            <label className={css.title}>Find contacts by name</label>
-                <input
-                    className={css.input_filter}
-                    type="text"
-                    name="filter"
-                    value={value}
-                    onChange={onChange}
-                ></input>
-        </> 
-    )
-}
+const ContactSearch = ({ onFilterChange }) => {
+  const contacts = useSelector((state) => state.contacts);
 
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredContacts = contacts.filter((contact) =>
+    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  useEffect(() => {
+    onFilterChange(searchTerm); 
+  }, [searchTerm, onFilterChange]);
+
+  return (
+    <div>
+      <input
+        type="text"
+        placeholder="Search contacts..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
+  );
+};
+
+export default ContactSearch;
